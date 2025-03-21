@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% load cart_extras %}
+
+
+{% block content %}
+<div class="col-md-2"></div>
+{% if cart_count != 0 %}
+<div class="col-md-8 border rounded p-3">
+    <table class="table table-striped">
+        <thead class="text-muted">
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">Product</th>
+                <th scope="col">Price</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Total Price</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        {% for item in cart %}
+        <tbody>
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>
+                    <a class="text-decoration-none" href="{{ item.product.get_absolute_url }}">
+                        {{ item.product.name }}
+                    </a>
+                </td>
+                <td>
+                    {% if item.product.discount > 0 %}
+                        <span class="text-danger">${{ item.product.get_discounted_price }}</span>
+                        <del class="text-muted">${{ item.product.price }}</del>
+                    {% else %}
+                        ${{ item.product.price }}
+                    {% endif %}
+                </td>
+                <td>{{ item.quantity }}</td>
+                <td>${{ item.quantity|floatformat:2|mul:item.product.get_discounted_price }}</td>
+                <td>
+                    <a class="text-danger text-decoration-none"
+                       href="{% url 'cart:remove_from_cart' item.product.id %}">Remove</a>
+                </td>
+            </tr>
+        </tbody>
+        {% endfor %}
+    </table>
+    <hr>
+    <h4 class="mt-4">
+        <span class="text-muted">Total:</span>
+        ${{ cart.get_total_price|floatformat:2 }}
+    </h4>
+    <div class="d-flex justify-content-between">
+        <a href="{% url 'orders:create_order' %}" class="btn btn-success mt-1">Checkout</a>
+        <a href="{% url 'orders:buy_now' %}" class="btn btn-primary mt-1">Buy Now</a>
+    </div>
+</div>
+{% else %}
+<div class="col-md-8 mt-5 pt-5 text-center">
+    <br>
+    <h3 class="text-muted text-capitalize">Cart is empty..!</h3>
+    <a href="/" class="text-primary text-decoration-none">Back</a>
+</div>
+{% endif %}
+<div class="col-md-2"></div>
+
+{% endblock %}
