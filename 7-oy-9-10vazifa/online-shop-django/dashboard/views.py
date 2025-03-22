@@ -11,12 +11,8 @@ from .forms import AddProductForm, AddCategoryForm, EditProductForm
 
 
 def is_manager(user):
-    try:
-        if not user.is_manager:
-            raise Http404
-        return True
-    except:
-        raise Http404
+    return user.is_authenticated and getattr(user, "is_manager", False)
+
 
 
 @user_passes_test(is_manager)
@@ -45,11 +41,10 @@ def add_product(request):
 @user_passes_test(is_manager)
 @login_required
 def delete_product(request, id):
-    product = Product.objects.filter(id=id).delete()
-    messages.success(request, 'product has been deleted!', 'success')
+    product = get_object_or_404(Product, id=id)
+    product.delete()
+    messages.success(request, 'Product has been deleted!', 'success')
     return redirect('dashboard:products')
-
-
 @user_passes_test(is_manager)
 @login_required
 def edit_product(request, id):

@@ -29,11 +29,11 @@ class Cart:
             self.save()
 
     def save(self):
-        self.session[CART_SESSION_ID] = self.cart  # ✅ Sessionni yangilash kerak!
+        self.session[CART_SESSION_ID] = self.cart
         self.session.modified = True
 
     def clear(self):
-        self.session.pop(CART_SESSION_ID, None)  # ✅ Xatolikni oldini olish
+        self.session.pop(CART_SESSION_ID, None)
         self.save()
 
     def __iter__(self):

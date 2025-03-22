@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
@@ -14,12 +15,15 @@ def create_order(request):
     for item in cart:
         OrderItem.objects.create(
             order=order,
-            product=item.product,
-            price=item.product.get_final_price(),
-            quantity=item.quantity
+            product=item['product'],
+            quantity=item['quantity'],
+            price = item['product'].get_final_price()
         )
 
-    return redirect('orders:pay_order', order_id=order.id)
+    cart.clear()
+    messages.success(request, "Your order has been created successfully!", "success")
+
+    return redirect("orders:order_detail", order_id=order.id)
 
 @login_required
 def checkout(request, order_id):
@@ -59,3 +63,9 @@ def buy_now(request):
 
     cart.clear()
     return redirect("orders:user_orders")
+
+@login_required
+def order_detail(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+    context = {'title': 'Order Detail', 'order': order}
+    return render(request, 'order_detail.html', context)

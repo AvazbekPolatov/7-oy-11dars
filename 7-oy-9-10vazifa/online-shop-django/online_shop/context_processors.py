@@ -4,7 +4,7 @@ from shop.models import Category
 
 def return_cart(request):
     cart = Cart(request)
-    cart_count = sum(int(item['quantity']) for item in cart)  # ✅ Xatolik tuzatildi
+    cart_count = sum(int(item['quantity']) for item in cart)
     return {'cart_count': cart_count}
 
 

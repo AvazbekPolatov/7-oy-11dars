@@ -5,9 +5,7 @@
 {% if orders %}
 {% for order in orders %}
 <div class="col-md-7 mb-4 border rounded p-3">
-<!-- order id on right -->
 <b style="float: right;">Order Id: {{ order.id }}</b>
-<!-- order payment status -->
 {% if order.status %}
     <h4><b class="text-success">Successful</b></h4>
 {% else %}
