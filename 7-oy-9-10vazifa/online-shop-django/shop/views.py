@@ -108,3 +108,21 @@ def filter_by_category(request, slug):
     context = {'products': paginat(request, products)}
     return render(request, 'home_page.html', context)
 
+def shop_page(request):
+    max_price = request.GET.get('max_price', 5000)
+    products = Product.objects.filter(price__lte=max_price)
+
+    paginator = Paginator(products, 6)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'shop.html', {'products': page_obj})
+def categories_page(request):
+    products = Product.objects.all()
+    return render(request, 'categories.html')
+
+def faqs_page(request):
+    return render(request, 'faqs.html')
+
+def about_page(request):
+    return render(request, 'about.html')
